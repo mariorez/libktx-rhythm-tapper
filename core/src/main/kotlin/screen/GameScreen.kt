@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
+import component.FallingBoxComponent
 import component.InputComponent
 import component.PlayerComponent
 import component.RenderComponent
@@ -48,10 +49,12 @@ class GameScreen : BaseScreen() {
                 }
             }
 
+            var counter = 0
             val box = assets.get<Texture>("box.png")
             val padding = 100f
             val gridSize = (gameSizes.worldWidthF() - padding) / 4
-            var boxPos = (gridSize / 2 - box.width / 2) + padding / 2
+            val xPos = (gridSize / 2 - box.width / 2) + padding / 2
+            val yPos = 70f
 
             mapOf(
                 "F" to Color.RED,
@@ -70,12 +73,30 @@ class GameScreen : BaseScreen() {
                     }
                     add<TransformComponent> {
                         zIndex = 1f
-                        position.set(boxPos, 70f)
+                        position.set(xPos + (gridSize * counter), yPos)
                     }
                     add<RenderComponent> { sprite = Sprite(box) }
                 }
-                boxPos += gridSize
+                counter++
             }
+
+            val noteSpeed = (gameSizes.worldHeightF() - yPos) / 3
+
+            entity {
+                add<FallingBoxComponent>()
+                add<TransformComponent> {
+                    position.set(xPos, gameSizes.worldHeightF())
+                    zIndex += 1
+                    setSpeed(noteSpeed)
+                    setMotionAngle(270f)
+                }
+                add<RenderComponent> {
+                    sprite = Sprite(box).apply {
+                        color = Color.RED
+                    }
+                }
+            }
+
         }
     }
 
