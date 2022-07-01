@@ -6,9 +6,11 @@ import BaseScreen
 import GameBoot.Companion.assets
 import GameBoot.Companion.gameSizes
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.utils.Align
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 import component.InputComponent
@@ -51,9 +53,21 @@ class GameScreen : BaseScreen() {
             val gridSize = (gameSizes.worldWidthF() - padding) / 4
             var boxPos = (gridSize / 2 - box.width / 2) + padding / 2
 
-            (1..4).forEach {
+            mapOf(
+                "F" to Color.RED,
+                "G" to Color.YELLOW,
+                "H" to Color.GREEN,
+                "J" to Color.BLUE
+            ).forEach { (letter, color) ->
                 entity {
-                    add<TargetBoxComponent>()
+                    add<TargetBoxComponent> {
+                        label.apply {
+                            setText(letter)
+                            setColor(color)
+                            setSize(64f, 64f)
+                            setAlignment(Align.center)
+                        }
+                    }
                     add<TransformComponent> {
                         zIndex = 1f
                         position.set(boxPos, 70f)
