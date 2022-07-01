@@ -15,8 +15,8 @@ class GameBoot : KtxGame<KtxScreen>() {
     companion object {
         val assets = AssetStorage()
         val gameSizes = GameSizes(
-            windowWidth = 540,
-            windowHeight = 960
+            windowWidth = 450,
+            windowHeight = 800
         )
     }
 

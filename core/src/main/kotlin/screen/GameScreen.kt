@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 import component.InputComponent
+import component.PlayerComponent
 import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
@@ -34,6 +35,7 @@ class GameScreen : BaseScreen() {
 
         world.apply {
             player = entity {
+                add<PlayerComponent>()
                 add<InputComponent>()
             }
 
@@ -80,10 +82,10 @@ class GameScreen : BaseScreen() {
             pad(10f)
         }
 
-        registerAction(Input.Keys.UP, Action.Name.UP)
-        registerAction(Input.Keys.DOWN, Action.Name.DOWN)
-        registerAction(Input.Keys.LEFT, Action.Name.LEFT)
-        registerAction(Input.Keys.RIGHT, Action.Name.RIGHT)
+        registerAction(Input.Keys.F, Action.Name.F)
+        registerAction(Input.Keys.G, Action.Name.G)
+        registerAction(Input.Keys.H, Action.Name.H)
+        registerAction(Input.Keys.J, Action.Name.J)
 
         hudStage.addActor(table)
     }
@@ -92,10 +94,10 @@ class GameScreen : BaseScreen() {
         val input = world.mapper<InputComponent>()[player]
         val isStarting = action.type == START
         when (action.name) {
-            Action.Name.UP -> input.up = isStarting
-            Action.Name.DOWN -> input.down = isStarting
-            Action.Name.LEFT -> input.left = isStarting
-            Action.Name.RIGHT -> input.right = isStarting
+            Action.Name.F -> input.f = isStarting
+            Action.Name.G -> input.g = isStarting
+            Action.Name.H -> input.h = isStarting
+            Action.Name.J -> input.j = isStarting
         }
     }
 }
