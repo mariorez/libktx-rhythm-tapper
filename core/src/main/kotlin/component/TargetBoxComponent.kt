@@ -1,6 +1,6 @@
 package component
 
-import GameBoot.Companion.assets
+import Main.Companion.assets
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle

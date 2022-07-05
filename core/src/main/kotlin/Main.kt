@@ -18,11 +18,11 @@ import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import screen.GameScreen
 
-class GameBoot : KtxGame<KtxScreen>() {
+class Main : KtxGame<KtxScreen>() {
 
     companion object {
         val assets = AssetStorage()
-        val gameSizes = GameSizes(
+        val sizes = Sizes(
             windowWidth = 450,
             windowHeight = 800
         )

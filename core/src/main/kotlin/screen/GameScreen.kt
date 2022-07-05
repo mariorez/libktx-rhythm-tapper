@@ -3,8 +3,8 @@ package screen
 import Action
 import Action.Type.START
 import BaseScreen
-import GameBoot.Companion.assets
-import GameBoot.Companion.gameSizes
+import Main.Companion.assets
+import Main.Companion.sizes
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.quillraven.fleks.Entity
-import com.github.quillraven.fleks.World
+import com.github.quillraven.fleks.world
 import component.InputComponent
 import component.PlayerComponent
 import component.RenderComponent
@@ -25,21 +25,25 @@ import system.RenderSystem
 
 class GameScreen : BaseScreen() {
     private val player: Entity
-    private val world = World {
-        inject(batch)
-        inject(camera)
-        inject(assets)
-        system<InputSystem>()
-        system<FallingBoxSystem>()
-        system<MovementSystem>()
-        system<RenderSystem>()
+    private val game = world {
+        injectables {
+            add(batch)
+            add(camera)
+            add(assets)
+        }
+        systems {
+            add<InputSystem>()
+            add<FallingBoxSystem>()
+            add<MovementSystem>()
+            add<RenderSystem>()
+        }
     }
 
     init {
         buildControls()
         spawnTargetBox()
 
-        world.apply {
+        game.apply {
             player = entity {
                 add<PlayerComponent>()
                 add<InputComponent>()
@@ -55,20 +59,20 @@ class GameScreen : BaseScreen() {
     }
 
     override fun render(delta: Float) {
-        world.update(delta)
+        game.update(delta)
         hudStage.draw()
     }
 
     override fun dispose() {
         super.dispose()
-        world.dispose()
+        game.dispose()
     }
 
     private fun spawnTargetBox() {
         var button = assets.get<Texture>("button.png")
         var counter = 0
         val padding = 50f
-        val gridSize = (gameSizes.worldWidthF() - padding) / 4
+        val gridSize = (sizes.worldWidthF() - padding) / 4
         val xPos = (gridSize / 2 - button.width / 2) + padding / 2
         val yPos = 70f
 
@@ -78,7 +82,7 @@ class GameScreen : BaseScreen() {
             "H" to Color.GREEN,
             "J" to Color.BLUE
         ).forEach { (letter, color) ->
-            world.entity {
+            game.entity {
                 add<TargetBoxComponent> {
                     label.apply {
                         setText(letter)
@@ -113,13 +117,14 @@ class GameScreen : BaseScreen() {
     }
 
     override fun doAction(action: Action) {
-        val input = world.mapper<InputComponent>()[player]
-        val isStarting = action.type == START
-        when (action.name) {
-            Action.Name.F -> input.f = isStarting
-            Action.Name.G -> input.g = isStarting
-            Action.Name.H -> input.h = isStarting
-            Action.Name.J -> input.j = isStarting
+        game.mapper<InputComponent>().getOrNull(player)?.let {
+            val isStarting = action.type == START
+            when (action.name) {
+                Action.Name.F -> it.f = isStarting
+                Action.Name.G -> it.g = isStarting
+                Action.Name.H -> it.h = isStarting
+                Action.Name.J -> it.j = isStarting
+            }
         }
     }
 }

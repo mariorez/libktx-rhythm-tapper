@@ -1,6 +1,6 @@
 package system
 
-import GameBoot.Companion.gameSizes
+import Main.Companion.sizes
 import manager.SongManager
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -19,10 +19,10 @@ class FallingBoxSystem(
     private var currentTime = 0f
     private val boxSize = 48f
     private val padding = 50f
-    private val gridSize = (gameSizes.worldWidthF() - padding) / 4
+    private val gridSize = (sizes.worldWidthF() - padding) / 4
     private val xPos = (gridSize / 2 - boxSize / 2) + padding / 2
     private val yPos = 70f
-    private val noteSpeed = (gameSizes.worldHeightF() - yPos) / 3
+    private val noteSpeed = (sizes.worldHeightF() - yPos) / 3
 
     init {
         songManager.parseSongData(assets["funky-junky.txt"])
@@ -36,7 +36,7 @@ class FallingBoxSystem(
             world.entity {
                 add<FallingBoxComponent>()
                 add<TransformComponent> {
-                    position.set(xPos, gameSizes.worldHeightF())
+                    position.set(xPos, sizes.worldHeightF())
                     zIndex += 2
                     setSpeed(noteSpeed)
                     setMotionAngle(270f)
