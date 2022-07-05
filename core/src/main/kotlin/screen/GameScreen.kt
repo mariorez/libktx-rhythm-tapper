@@ -18,6 +18,7 @@ import component.PlayerComponent
 import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
+import manager.SongManager
 import system.FallingBoxSystem
 import system.InputSystem
 import system.MovementSystem
@@ -25,10 +26,12 @@ import system.RenderSystem
 
 class GameScreen : BaseScreen() {
     private val player: Entity
+    private val songManager = SongManager(assets["funky-junky.txt"])
     private val game = world {
         injectables {
             add(batch)
             add(camera)
+            add(songManager)
             add(assets)
         }
         systems {
