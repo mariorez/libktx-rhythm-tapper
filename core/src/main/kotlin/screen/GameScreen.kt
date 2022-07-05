@@ -27,7 +27,7 @@ import system.RenderSystem
 class GameScreen : BaseScreen() {
     private val player: Entity
     private val songManager = SongManager(assets["funky-junky.txt"])
-    private val game = world {
+    private val world = world {
         injectables {
             add(batch)
             add(camera)
@@ -46,7 +46,7 @@ class GameScreen : BaseScreen() {
         buildControls()
         spawnTargetBox()
 
-        game.apply {
+        world.apply {
             player = entity {
                 add<PlayerComponent>()
                 add<InputComponent>()
@@ -62,17 +62,17 @@ class GameScreen : BaseScreen() {
     }
 
     override fun render(delta: Float) {
-        game.update(delta)
+        world.update(delta)
         hudStage.draw()
     }
 
     override fun dispose() {
         super.dispose()
-        game.dispose()
+        world.dispose()
     }
 
     private fun spawnTargetBox() {
-        var button = assets.get<Texture>("button.png")
+        val button = assets.get<Texture>("button.png")
         var counter = 0
         val padding = 50f
         val gridSize = (sizes.worldWidthF() - padding) / 4
@@ -85,7 +85,7 @@ class GameScreen : BaseScreen() {
             "H" to Color.GREEN,
             "J" to Color.BLUE
         ).forEach { (letter, color) ->
-            game.entity {
+            world.entity {
                 add<TargetBoxComponent> {
                     label.apply {
                         setText(letter)
@@ -120,7 +120,7 @@ class GameScreen : BaseScreen() {
     }
 
     override fun doAction(action: Action) {
-        game.mapper<InputComponent>().getOrNull(player)?.let {
+        world.mapper<InputComponent>().getOrNull(player)?.let {
             val isStarting = action.type == START
             when (action.name) {
                 Action.Name.F -> it.f = isStarting
