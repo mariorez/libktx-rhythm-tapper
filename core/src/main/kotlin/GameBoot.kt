@@ -1,5 +1,7 @@
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.assets.loaders.MusicLoader
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
@@ -11,6 +13,7 @@ import ktx.app.KtxGame
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import ktx.app.Platform
+import ktx.assets.TextAssetLoader
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import screen.GameScreen
@@ -47,6 +50,8 @@ class GameBoot : KtxGame<KtxScreen>() {
         KtxAsync.initiate()
 
         assets.apply {
+            setLoader<Music> { MusicLoader(fileResolver) }
+            setLoader<String> { TextAssetLoader(fileResolver) }
             setLoader<FreeTypeFontGenerator> { FreeTypeFontGeneratorLoader(fileResolver) }
             setLoader<BitmapFont>(".ttf") { FreetypeFontLoader(fileResolver) }
 
@@ -62,8 +67,11 @@ class GameBoot : KtxGame<KtxScreen>() {
                     magFilter = Texture.TextureFilter.Linear
                 }
             })
+            loadSync<String>("funky-junky.txt")
+            loadSync<Music>("funky-junky.mp3")
             loadSync<Texture>("space.png").setFilter(Linear, Linear)
             loadSync<Texture>("box.png").setFilter(Linear, Linear)
+            loadSync<Texture>("button.png").setFilter(Linear, Linear)
         }
 
         addScreen(GameScreen())

@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Align
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
-import component.FallingBoxComponent
 import component.InputComponent
 import component.PlayerComponent
 import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
+import system.FallingBoxSystem
 import system.InputSystem
 import system.MovementSystem
 import system.RenderSystem
@@ -28,13 +28,16 @@ class GameScreen : BaseScreen() {
     private val world = World {
         inject(batch)
         inject(camera)
+        inject(assets)
         system<InputSystem>()
+        system<FallingBoxSystem>()
         system<MovementSystem>()
         system<RenderSystem>()
     }
 
     init {
         buildControls()
+        spawnTargetBox()
 
         world.apply {
             player = entity {
@@ -48,55 +51,6 @@ class GameScreen : BaseScreen() {
                     sprite = Sprite(assets.get<Texture>("space.png"))
                 }
             }
-
-            var counter = 0
-            val box = assets.get<Texture>("box.png")
-            val padding = 100f
-            val gridSize = (gameSizes.worldWidthF() - padding) / 4
-            val xPos = (gridSize / 2 - box.width / 2) + padding / 2
-            val yPos = 70f
-
-            mapOf(
-                "F" to Color.RED,
-                "G" to Color.YELLOW,
-                "H" to Color.GREEN,
-                "J" to Color.BLUE
-            ).forEach { (letter, color) ->
-                entity {
-                    add<TargetBoxComponent> {
-                        label.apply {
-                            setText(letter)
-                            setColor(color)
-                            setSize(64f, 64f)
-                            setAlignment(Align.center)
-                        }
-                    }
-                    add<TransformComponent> {
-                        zIndex = 1f
-                        position.set(xPos + (gridSize * counter), yPos)
-                    }
-                    add<RenderComponent> { sprite = Sprite(box) }
-                }
-                counter++
-            }
-
-            val noteSpeed = (gameSizes.worldHeightF() - yPos) / 3
-
-            entity {
-                add<FallingBoxComponent>()
-                add<TransformComponent> {
-                    position.set(xPos, gameSizes.worldHeightF())
-                    zIndex += 1
-                    setSpeed(noteSpeed)
-                    setMotionAngle(270f)
-                }
-                add<RenderComponent> {
-                    sprite = Sprite(box).apply {
-                        color = Color.RED
-                    }
-                }
-            }
-
         }
     }
 
@@ -108,6 +62,39 @@ class GameScreen : BaseScreen() {
     override fun dispose() {
         super.dispose()
         world.dispose()
+    }
+
+    private fun spawnTargetBox() {
+        var button = assets.get<Texture>("button.png")
+        var counter = 0
+        val padding = 50f
+        val gridSize = (gameSizes.worldWidthF() - padding) / 4
+        val xPos = (gridSize / 2 - button.width / 2) + padding / 2
+        val yPos = 70f
+
+        mapOf(
+            "F" to Color.RED,
+            "G" to Color.YELLOW,
+            "H" to Color.GREEN,
+            "J" to Color.BLUE
+        ).forEach { (letter, color) ->
+            world.entity {
+                add<TargetBoxComponent> {
+                    label.apply {
+                        setText(letter)
+                        setColor(color)
+                        setSize(button.width.toFloat(), button.height.toFloat())
+                        setAlignment(Align.center)
+                    }
+                }
+                add<TransformComponent> {
+                    zIndex = 1f
+                    position.set(xPos + (gridSize * counter), yPos)
+                }
+                add<RenderComponent> { sprite = Sprite(button) }
+            }
+            counter++
+        }
     }
 
     private fun buildControls() {
