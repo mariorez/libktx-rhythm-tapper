@@ -29,6 +29,12 @@ class FallingBoxSystem(
         "H" to Color.GREEN,
         "J" to Color.BLUE
     )
+    private val xPositions = mapOf(
+        "F" to xPos,
+        "G" to xPos + (gridSize * 1),
+        "H" to xPos + (gridSize * 2),
+        "J" to xPos + (gridSize * 3)
+    )
 
     override fun onTick() {
 
@@ -39,8 +45,11 @@ class FallingBoxSystem(
         world.entity {
             add<FallingBoxComponent>()
             add<TransformComponent> {
-                position.set(xPos, sizes.worldHeightF())
-                zIndex += 2
+                position.set(
+                    xPositions[songManager.currentKey()]!!,
+                    sizes.worldHeightF()
+                )
+                zIndex = 2f
                 setSpeed(noteSpeed)
                 setMotionAngle(270f)
             }
