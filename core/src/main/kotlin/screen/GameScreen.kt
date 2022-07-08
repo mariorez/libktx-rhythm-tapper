@@ -19,7 +19,7 @@ import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
 import manager.SongManager
-import system.FallingBoxSystem
+import system.SpawnFallingBoxSystem
 import system.InputSystem
 import system.MovementSystem
 import system.RenderSystem
@@ -36,7 +36,7 @@ class GameScreen : BaseScreen() {
         }
         systems {
             add<InputSystem>()
-            add<FallingBoxSystem>()
+            add<SpawnFallingBoxSystem>()
             add<MovementSystem>()
             add<RenderSystem>()
         }

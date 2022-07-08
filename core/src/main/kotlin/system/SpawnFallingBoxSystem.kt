@@ -11,7 +11,7 @@ import component.TransformComponent
 import ktx.assets.async.AssetStorage
 import manager.SongManager
 
-class FallingBoxSystem(
+class SpawnFallingBoxSystem(
     private val songManager: SongManager,
     private val assets: AssetStorage
 ) : IntervalSystem() {
