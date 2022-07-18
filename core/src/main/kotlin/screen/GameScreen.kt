@@ -3,8 +3,8 @@ package screen
 import Action
 import Action.Type.START
 import BaseScreen
-import Main.Companion.assets
-import Main.Companion.sizes
+import GameBoot.Companion.assets
+import GameBoot.Companion.sizes
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
@@ -19,10 +19,10 @@ import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
 import manager.SongManager
-import system.SpawnFallingBoxSystem
 import system.InputSystem
 import system.MovementSystem
 import system.RenderSystem
+import system.SpawnFallingBoxSystem
 
 class GameScreen : BaseScreen() {
     private val player: Entity
@@ -55,14 +55,16 @@ class GameScreen : BaseScreen() {
             entity {
                 add<TransformComponent>()
                 add<RenderComponent> {
-                    sprite = Sprite(assets.get<Texture>("space.png"))
+                    sprite = Sprite(assets.get<Texture>("space.png")).apply {
+                        setSize(sizes.windowWidthF(), sizes.windowHeightF())
+                    }
                 }
             }
         }
     }
 
     override fun render(delta: Float) {
-        world.update(delta)
+        world.update(delta.coerceAtMost(1 / 30f))
         hudStage.draw()
     }
 
@@ -74,10 +76,10 @@ class GameScreen : BaseScreen() {
     private fun spawnTargetBox() {
         val button = assets.get<Texture>("button.png")
         var counter = 0
-        val padding = 50f
+        val padding = 300f
         val gridSize = (sizes.worldWidthF() - padding) / 4
         val xPos = (gridSize / 2 - button.width / 2) + padding / 2
-        val yPos = 70f
+        val yPos = 32f
 
         mapOf(
             "F" to Color.RED,
@@ -127,7 +129,10 @@ class GameScreen : BaseScreen() {
                 Action.Name.G -> it.g = isStarting
                 Action.Name.H -> it.h = isStarting
                 Action.Name.J -> it.j = isStarting
+                else -> {}
             }
         }
+
+        super.doAction(action)
     }
 }

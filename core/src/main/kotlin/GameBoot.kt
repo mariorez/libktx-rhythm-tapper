@@ -12,26 +12,24 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import ktx.app.KtxGame
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
-import ktx.app.Platform
 import ktx.assets.TextAssetLoader
 import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import screen.GameScreen
 
-class Main : KtxGame<KtxScreen>() {
+class GameBoot : KtxGame<KtxScreen>() {
 
     companion object {
         val assets = AssetStorage()
         val sizes = Sizes(
-            windowWidth = 450,
-            windowHeight = 800
+            windowWidth = 800,
+            windowHeight = 600
         )
     }
 
     override fun create() {
 
-        Gdx.input.inputProcessor = if (Platform.isMobile) InputMultiplexer()
-        else InputMultiplexer(object : KtxInputAdapter {
+        Gdx.input.inputProcessor = InputMultiplexer(object : KtxInputAdapter {
             override fun keyDown(keycode: Int): Boolean {
                 (currentScreen as BaseScreen).apply {
                     getActionMap()[keycode]?.let { doAction(Action(it, Action.Type.START)) }

@@ -1,6 +1,6 @@
 package system
 
-import Main.Companion.sizes
+import GameBoot.Companion.sizes
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -18,10 +18,10 @@ class SpawnFallingBoxSystem(
 
     private var currentTime = 0f
     private val boxSize = 48f
-    private val padding = 50f
+    private val padding = 300f
     private val gridSize = (sizes.worldWidthF() - padding) / 4
     private val xPos = (gridSize / 2 - boxSize / 2) + padding / 2
-    private val yPos = 70f
+    private val yPos = 32f
     private val noteSpeed = (sizes.worldHeightF() - yPos) / 3
     private val colors = mapOf(
         "F" to Color.RED,
