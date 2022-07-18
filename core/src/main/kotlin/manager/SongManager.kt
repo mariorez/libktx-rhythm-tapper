@@ -5,7 +5,7 @@ import kotlin.properties.Delegates
 class SongManager(
     private val songData: String
 ) {
-    private var songName: String by Delegates.notNull()
+    var songName: String by Delegates.notNull()
     private var songDuration: Float by Delegates.notNull()
     private var keyTimeIndex = 2
     private val keyTimeList = mutableListOf<Pair<String, Float>>()

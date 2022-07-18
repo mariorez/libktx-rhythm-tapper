@@ -1,6 +1,8 @@
 package system
 
+import GameBoot.Companion.assets
 import GameBoot.Companion.sizes
+import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -8,15 +10,14 @@ import com.github.quillraven.fleks.IntervalSystem
 import component.FallingBoxComponent
 import component.RenderComponent
 import component.TransformComponent
-import ktx.assets.async.AssetStorage
 import manager.SongManager
 
-class SpawnFallingBoxSystem(
-    private val songManager: SongManager,
-    private val assets: AssetStorage
-) : IntervalSystem() {
+class SpawnFallingBoxSystem : IntervalSystem() {
 
-    private var currentTime = 0f
+    private val songManager = SongManager(assets["funky-junky.txt"])
+    private val music = assets.get<Music>(songManager.songName)
+
+    private var increasedZIndex = 2f
     private val boxSize = 48f
     private val padding = 300f
     private val gridSize = (sizes.worldWidthF() - padding) / 4
@@ -38,9 +39,9 @@ class SpawnFallingBoxSystem(
 
     override fun onTick() {
 
-        currentTime += deltaTime
+        music.play()
 
-        if (songManager.finished() || currentTime < songManager.currentTime()) return
+        if (songManager.finished() || music.position < songManager.currentTime()) return
 
         world.entity {
             add<FallingBoxComponent>()
@@ -49,7 +50,7 @@ class SpawnFallingBoxSystem(
                     xPositions[songManager.currentKey()]!!,
                     sizes.worldHeightF()
                 )
-                zIndex = 2f
+                zIndex = increasedZIndex++
                 setSpeed(noteSpeed)
                 setMotionAngle(270f)
             }

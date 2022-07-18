@@ -18,7 +18,6 @@ import component.PlayerComponent
 import component.RenderComponent
 import component.TargetBoxComponent
 import component.TransformComponent
-import manager.SongManager
 import system.InputSystem
 import system.MovementSystem
 import system.RenderSystem
@@ -26,13 +25,10 @@ import system.SpawnFallingBoxSystem
 
 class GameScreen : BaseScreen() {
     private val player: Entity
-    private val songManager = SongManager(assets["funky-junky.txt"])
     private val world = world {
         injectables {
             add(batch)
             add(camera)
-            add(songManager)
-            add(assets)
         }
         systems {
             add<InputSystem>()
@@ -64,7 +60,7 @@ class GameScreen : BaseScreen() {
     }
 
     override fun render(delta: Float) {
-        world.update(delta.coerceAtMost(1 / 30f))
+        world.update(delta)
         hudStage.draw()
     }
 
